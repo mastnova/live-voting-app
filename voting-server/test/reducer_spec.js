@@ -32,7 +32,8 @@ describe('reducer', () => {
 
     expect(nextState).to.equal(fromJS({
       vote: {
-        pair: ['Trainspotting', '28 Days Later']
+        pair: ['Trainspotting', '28 Days Later'],
+        round: 1
       },
       entries: []
     }));
@@ -41,7 +42,8 @@ describe('reducer', () => {
   it('handles VOTE', () => {
     const initialState = fromJS({
       vote: {
-        pair: ['Trainspotting', '28 Days Later']
+        pair: ['Trainspotting', '28 Days Later'],
+        round: 1
       },
       entries: []
     });
@@ -51,6 +53,7 @@ describe('reducer', () => {
     expect(nextState).to.equal(fromJS({
       vote: {
         pair: ['Trainspotting', '28 Days Later'],
+        round: 1,
         tally: {Trainspotting: 1}
       },
       entries: []

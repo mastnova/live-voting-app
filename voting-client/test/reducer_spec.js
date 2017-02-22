@@ -67,10 +67,11 @@ describe('reducer', () => {
     }));
   });
 
-  it('handles VOTE by setting hasVoted', () => {
+  it('handles VOTE by setting myVote', () => {
     const state = fromJS({
       vote: {
         pair: ['Trainspotting', '28 Days Later'],
+        round: 8,
         tally: {Trainspotting: 1}
       }
     });
@@ -80,16 +81,21 @@ describe('reducer', () => {
     expect(nextState).to.equal(fromJS({
       vote: {
         pair: ['Trainspotting', '28 Days Later'],
+        round: 8,
         tally: {Trainspotting: 1}
       },
-      hasVoted: 'Trainspotting'
+      myVote: {
+        round: 8,
+        entry: 'Trainspotting'
+      }
     }));
   });
 
-  it('does not set hasVoted for VOTE on invalid entry', () => {
+  it('does not set myVote for VOTE on invalid entry', () => {
     const state = fromJS({
       vote: {
         pair: ['Trainspotting', '28 Days Later'],
+        round: 1,
         tally: {Trainspotting: 1}
       }
     });
@@ -99,24 +105,30 @@ describe('reducer', () => {
     expect(nextState).to.equal(fromJS({
       vote: {
         pair: ['Trainspotting', '28 Days Later'],
+        round: 1,
         tally: {Trainspotting: 1}
       }
     }));
   });
 
-  it('removes hasVoted on SET_STATE if pair changes', () => {
+  it('removes myVote on SET_STATE if round has changed', () => {
     const initialState = fromJS({
       vote: {
         pair: ['Trainspotting', '28 Days Later'],
+        round: 2,
         tally: {Trainspotting: 1}
       },
-      hasVoted: 'Trainspotting'
+      myVote: {
+        round: 2,
+        entry: 'Trainspotting'
+      }
     });
     const action = {
       type: 'SET_STATE',
       state: {
         vote: {
-          pair: ['Sunshine', 'Slumdog Millionaire']
+          pair: ['Sunshine', 'Slumdog Millionaire'],
+          round: 3
         }
       }
     };
@@ -124,7 +136,8 @@ describe('reducer', () => {
 
     expect(nextState).to.equal(fromJS({
       vote: {
-        pair: ['Sunshine', 'Slumdog Millionaire']
+        pair: ['Sunshine', 'Slumdog Millionaire'],
+        round: 3
       }
     }));
   });
