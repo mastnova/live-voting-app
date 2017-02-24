@@ -34,15 +34,28 @@ function getWinners(vote) {
   else                       return [a, b];
 }
 
-export function vote(voteState, entry) {
+function removePreviousVote(voteState, voter) {
+  const previousVote = voteState.getIn(['votes', voter]);
+  if (previousVote) {
+    return voteState.updateIn(['tally', previousVote], t => t - 1)
+                    .removeIn(['votes', voter]);
+  } else {
+    return voteState;
+  }
+}
+
+ function addVote(voteState, entry, voter) {
   if( !voteState.get('pair').includes(entry) ) {
     return voteState;
   }
-  return voteState.updateIn(
-    ['tally', entry],
-    0,
-    tally => tally + 1
-  );
+  return voteState.updateIn(['tally', entry], 0, t => t + 1)
+                  .setIn(['votes', voter], entry);
 }
 
-
+export function vote(voteState, entry, voter) {
+  return addVote(
+    removePreviousVote(voteState, voter),
+    entry,
+    voter
+  );
+}

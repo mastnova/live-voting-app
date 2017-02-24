@@ -19,3 +19,10 @@ export function next() {
     type: 'NEXT'
   };
 }
+
+export function setClientId(clientId) {
+  return {
+    type: 'SET_CLIENT_ID',
+    clientId
+  };
+}

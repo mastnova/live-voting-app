@@ -114,12 +114,15 @@ describe('application logic', () => {
         pair: List.of('Trainspotting', '28 Days Later'),
         round: 1
       });
-      const nextState = vote(state, 'Trainspotting')
+      const nextState = vote(state, 'Trainspotting', 'voter1')
       expect(nextState).to.equal(Map({
         pair: List.of('Trainspotting', '28 Days Later'),
         round: 1,
         tally: Map({
           'Trainspotting': 1
+        }),
+        votes: Map({
+          voter1: 'Trainspotting'
         })
       }));
     });
@@ -131,17 +134,49 @@ describe('application logic', () => {
         tally: Map({
           'Trainspotting': 3,
           '28 Days Later': 2
-        })
+        }),
+        votes: Map()
       });
-      const nextState = vote(state, 'Trainspotting');
+      const nextState = vote(state, 'Trainspotting', 'voter1');
       expect(nextState).to.equal(Map({
         pair: List.of('Trainspotting', '28 Days Later'),
         round: 1,
         tally: Map({
           'Trainspotting': 4,
           '28 Days Later': 2
+        }),
+        votes: Map({
+          voter1: 'Trainspotting'
         })
       }));
+    });
+
+    it('nullifies previous vote for the same voter', () => {
+      const state = Map({
+        round: 1,
+        pair: List.of('Trainspotting', '28 Days Later'),
+        tally: Map({
+          'Trainspotting': 3,
+          '28 Days Later': 2
+        }),
+        votes: Map({
+          voter1: '28 Days Later'
+        })
+      });
+      const nextState = vote(state, 'Trainspotting', 'voter1');
+      expect(nextState).to.equal(
+        Map({
+          round: 1,
+          pair: List.of('Trainspotting', '28 Days Later'),
+          tally: Map({
+            'Trainspotting': 4,
+            '28 Days Later': 1
+          }),
+          votes: Map({
+            voter1: 'Trainspotting'
+          })
+        })
+      );
     });
 
     it('ignores the vote if for an invalid entry', () => {
